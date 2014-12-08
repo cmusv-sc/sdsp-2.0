@@ -1,0 +1,24 @@
+@(form: Form[Application.Login]) 
+
+@main("Login") {    
+    
+    @helper.form(routes.Application.authenticate) {
+        
+        <h1>Please sign in below:</h1>
+        
+        <p>
+            <input type="username" name="username" placeholder="Username" value="@form("username").value">
+        </p>
+
+        <p>
+            <input type="password" name="password" placeholder="Password" value="@form("password").value">
+        </p>
+        <p>
+            <button type="submit" class="btn btn-success">Log in</button>
+            <a style="PADDING-LEFT: 15px" href="@routes.Application.register()">Register</a>
+        </p>
+    }
+            
+}
+    
+

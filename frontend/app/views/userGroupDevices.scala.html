@@ -1,0 +1,61 @@
+
+@(userGroup: UserGroup, devices: List[Device], ugForm: play.data.Form[UserGroup])
+
+@import helper._
+
+@main(userGroup.getUserGroupName() + " Devices") {
+
+  <h2>@userGroup.getUserGroupName() User Group</h2>
+  <h3>@devices.size() devices</h3>
+  @if(userGroup.getMemberEdit()) {
+    <h4>Setting: members may share devices</h4>
+  } else {
+    <h4>Setting: members may not share devices</h4>
+  }
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Device Uri</td>
+      <td>Device Type Uri</td>
+      <td>Sensor Uris</td>
+      <td>Owner</td>
+      <td>User Defined</td>
+      <td>Operation</td>
+    </tr>
+
+    @for(device <- devices) {
+      <tr id="@device.getDeviceId()" class="devices">
+        <td class="deviceUri">@device.getDeviceUri()</td>
+        <td class="deviceTypeUri">@device.getDeviceTypeUri()</td>
+        <td class="sensorUris">@device.getSensorUris()</td>
+        <td class="owner">@device.getOwner()</td>
+        <td class="userDefined">@device.getDeviceUserDefinedFields()</td>
+        <td class="operation">
+          @if(session.get("username").equals(userGroup.getUserGroupOwner()) 
+            || (!session.get("username").equals(userGroup.getUserGroupOwner()) && userGroup.getMemberEdit() && session.get("username").equals(device.getOwner()))) {
+            @form(routes.UserGroups.deleteDevice()){
+              <input name="userGroupOwner" type="hidden" value="@userGroup.getUserGroupOwner()">
+              <input name="userGroupName" type="hidden" value="@userGroup.getUserGroupName()">
+              <input name="deviceUri" type="hidden" value="@device.getDeviceUri()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+            }
+          }
+        </td>
+      </tr>
+    }
+  </table>
+
+  @if(session.get("username").equals(userGroup.getUserGroupOwner()) 
+    || (!session.get("username").equals(userGroup.getUserGroupOwner()) && userGroup.getMemberEdit())) {
+    @form(routes.UserGroups.addDevice()) {
+      <h3>Share a personal device to user group</h3>
+      <input name="userGroupOwner" type="hidden" value="@userGroup.getUserGroupOwner()">
+      <input name="userGroupName" type="hidden" value="@userGroup.getUserGroupName()">
+      @select( ugForm("deviceUri"), options(DeviceGroup.getDeviceUris(session.get("username"), "Personal")), '_label -> "Device Uri")
+      <div class="actions">
+        <input type="submit" class="btn btn-success" value="Share">
+        <a href="@routes.UserGroups.displayDevices(userGroup.getUserGroupOwner(), userGroup.getUserGroupName())" class="btn">Cancel</a>
+      </div>
+    }
+  }
+}
+

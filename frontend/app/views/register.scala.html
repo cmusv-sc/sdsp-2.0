@@ -1,0 +1,36 @@
+@(form: play.data.Form[User]) 
+
+@main("Register") {    
+
+  @helper.form(routes.Application.registerUser) {
+        
+    <h2>Please register below:</h2>
+    
+    <div style="float: left; width: 20%;">
+      <ul class="list-unstyled">
+        <li><p><label for="firstName">First Name</label></p></li>
+        <li><p><label for="lastName">Last Name</label></p></li>
+        <li><p><label for="email">Email</label></p></li>
+        <li><p><label for="username">Username</label></p></li>
+        <li><p><label for="password">Password</label></p></li>
+        <li><p><label for="confirmPassword">Confirm Password</label></p></li>
+      </ul>
+    </div>
+    <div style="float: right; width: 80%;">
+      <ul class="list-unstyled">
+        <li><p><input type="firstName" name="firstName" value="@form("firstName").value"></p></li>
+        <li><p><input type="lastName" name="lastName" value="@form("lastName").value"></p></li>
+        <li><p><input type="email" name="email" value="@form("email").value"></p></li>
+        <li><p><input type="username" name="username" value="@form("username").value"></p></li>
+        <li><p><input type="password" name="password" value="@form("password").value"></p></li>
+        <li><p><input type="password" name="confirmPassword" value="@form("confirmPassword").value"></p></li>
+      </ul>
+    </div>
+
+    <button type="submit" class="btn btn-success">Register</button>
+        
+    }
+            
+}
+    
+

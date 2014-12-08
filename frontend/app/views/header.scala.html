@@ -1,0 +1,39 @@
+
+@()
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" style="padding-bottom: 0;" href="/">
+        <img src='@routes.Assets.at("images/logo.png")' style="height: 28px;">
+      </a>
+    </div>
+    <div class="navbar-collapse collapse" style="height:">
+      <ul class="nav navbar-nav navbar-right">
+
+        <li><a href="@routes.Application.index()">Home</a></li>
+
+        @if(!session.get("username")){
+          <form class="navbar-form navbar-right" action="@routes.Application.login()">
+            <button type="submit" class="btn btn-link">Log in</button>
+          </form>
+        }else{
+          <li class="drowdown"><a href="#" class="drowdown-toggle" data-toggle="dropdown">Device Management<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="@routes.SensorTypes.display()">Sensor Types</a></li>
+              <li><a href="@routes.DeviceTypes.display()">Device Types</a></li>
+              <li><a href="@routes.DeviceGroups.displayGroup("Personal")">Devices</a></li>
+            </ul>
+          </li>          
+
+          <li><a href="@routes.DeviceGroups.display()">Device Groups</a></li>
+          <li><a href="@routes.UserGroups.display()">User Groups</a></li>
+          
+          <form class="navbar-form navbar-right" action="@routes.Application.logout()">
+            <button type="submit" class="btn btn-link">Log out</button>
+          </form>
+        }
+
+      </ul>
+    </div>
+  </div>
+</div>

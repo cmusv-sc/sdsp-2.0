@@ -1,0 +1,57 @@
+
+@(deviceTypes: List[DeviceType], dtForm: play.data.Form[DeviceType])
+
+@import helper._
+
+@main("Device Types") {
+
+  <script src="/assets/javascripts/add_sensor_type_uri_button.js"></script>
+
+  <h2>@deviceTypes.size() Device Types</h2>
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Uri</td>
+      <td>Sensor Types</td>
+      <td>Manufacturer</td>
+      <td>Version</td>
+      <td>Count</td>
+      <td>Operation</td>
+    </tr>
+
+    @for(dt <- deviceTypes) {
+      <tr id="@dt.getDeviceTypeUri()" class="deviceTypes">
+        <td class="deviceTypeUri">@dt.getDeviceTypeUri()</td>
+        <td class="sensorTypes">@dt.getSensorTypeUriList()</td>
+        <td class="manufacturer">@dt.getManufacturer()</td>
+        <td class="version">@dt.getVersion()</td>
+        <td class="count">@dt.getInstanceCount()</td>
+        <td class="operation">
+          @form(routes.DeviceTypes.delete()) {
+            <input name="uriHolder" type="hidden" value="@dt.getDeviceTypeUri()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+          }
+        </td>
+      </tr>
+    }
+  </table>
+
+  @form(routes.DeviceTypes.create()) {
+    <h3>Create a new sensor type</h3>
+    @inputText( dtForm("deviceTypeUri"), '_label -> "Device Type Uri")
+    @inputText( dtForm("manufacturer"), '_label -> "Manufacturer")
+    @inputText( dtForm("version"), '_label -> "Version")
+
+    <div class="sensorTypeUris">
+      <label>Sensor Type Uris</label>
+      <button class="add_sensor_type_uri_button btn btn-default">Add</button>
+      <dl class=" " id="sensorTypeUri0_field">
+        <input type="text" id="sensorTypeUri0" name="sensorTypeUri0" value="">
+      </dl>
+    </div>
+
+    <div class="actions">
+      <input type="submit" class="btn btn-success" value="Create">
+      <a href="@routes.DeviceTypes.display()" class="btn">Cancel</a>
+    </div>
+  }
+}

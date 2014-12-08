@@ -1,0 +1,47 @@
+
+@(deviceGroups: List[DeviceGroup], dgForm: play.data.Form[DeviceGroup])
+
+@import helper._
+
+@main("Device Groups") {
+
+  <h2>@deviceGroups.size() Device Groups</h2>
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Name</td>
+      <td>Devices</td>
+      <td>Operation</td>
+    </tr>
+
+    @for(deviceGroup <- deviceGroups) {
+      <tr id="@deviceGroup.getDeviceGroupId()" class="deviceGroups">
+        <td class="deviceGroupName">@deviceGroup.getDeviceGroupName()</td>
+        @if(deviceGroup.getDeviceGroupName().equals("Shared")) {
+          <td class="deviceGroupCount">@DeviceGroup.getDevices(session.get("username"), "Shared").size()</td>
+        } else {
+          <td class="deviceGroupCount">@deviceGroup.getDeviceUris().length</td>
+        }
+        <td class="operation">
+          @form(routes.DeviceGroups.displayGroup(deviceGroup.getDeviceGroupName())) {
+            <input type="submit"  class="btn btn-primary" value="View">
+          }
+          @if(!deviceGroup.getDeviceGroupName().equals("Shared") && !deviceGroup.getDeviceGroupName().equals("Personal")) {
+            @form(routes.DeviceGroups.delete()){
+              <input name="nameHolder" type="hidden" value="@deviceGroup.getDeviceGroupName()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+            }
+          } 
+        </td>
+      </tr>
+    }
+  </table>
+
+  @form(routes.DeviceGroups.create()) {
+    <h3>Create a new device group</h3>
+    @inputText( dgForm("deviceGroupName"), '_label -> "Device Group Name")
+    <div class="actions">
+      <input type="submit" class="btn btn-success" value="Create">
+      <a href="@routes.DeviceGroups.display()" class="btn">Cancel</a>
+    </div>
+  }
+}

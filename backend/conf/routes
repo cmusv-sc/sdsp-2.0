@@ -1,0 +1,62 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                                                                  controllers.Application.index()
+
+# User
+GET     /user/get/:username                                                                controllers.Users.get(username: String)
+POST    /authenticate                                                                      controllers.Users.authenticate()
+POST    /createUser                                                                        controllers.Users.create()
+POST    /changePassword                                                                    controllers.Users.changePassword()
+
+# DeviceGroup
+# TODO: assumes all requestUsers come from deviceGroupOwner
+GET     /deviceGroup/get/:deviceGroupOwner/:deviceGroupName                                controllers.DeviceGroups.get(deviceGroupOwner: String, deviceGroupName: String)
+#GET     /deviceGroup/getById/:deviceGroupId                                                controllers.DeviceGroups.getById(deviceGroupId: String)
+GET     /deviceGroup/getAll/:deviceGroupOwner                                              controllers.DeviceGroups.getAll(deviceGroupOwner: String)
+GET     /deviceGroup/getDevices/:deviceGroupOwner/:deviceGroupName                         controllers.DeviceGroups.getDevices(deviceGroupOwner: String, deviceGroupName: String)
+GET     /deviceGroup/addDevice/:deviceGroupOwner/:deviceGroupName/:deviceUri               controllers.DeviceGroups.addDevice(deviceGroupOwner: String, deviceGroupName: String, deviceUri: String)
+GET     /deviceGroup/deleteDevice/:deviceGroupOwner/:deviceGroupName/:deviceUri            controllers.DeviceGroups.deleteDevice(deviceGroupOwner: String, deviceGroupName: String, deviceUri: String)
+GET     /deviceGroup/delete/:deviceGroupOwner/:deviceGroupName                             controllers.DeviceGroups.delete(deviceGroupOwner: String, deviceGroupName: String)
+POST    /createDeviceGroup                                                                 controllers.DeviceGroups.create()
+
+# UserGroup
+# TODO: remove request user from routes once authentication mechanism implemented
+GET     /userGroup/getOwnedGroups/:requestUser/:userGroupOwner                             controllers.UserGroups.getOwnedGroups(requestUser: String, userGroupOwner: String)
+GET     /userGroup/getMemberGroups/:requestUser/:userGroupMember                           controllers.UserGroups.getMemberGroups(requestUser: String, userGroupMember: String)
+GET     /userGroup/get/:requestUser/:userGroupOwner/:userGroupName                         controllers.UserGroups.get(requestUser: String, userGroupOwner: String, userGroupName: String)
+GET     /userGroup/getDevices/:requestUser/:userGroupOwner/:userGroupName                  controllers.UserGroups.getDevices(requestUser: String, userGroupOwner: String, userGroupName: String)
+GET     /userGroup/addMember/:requestUser/:userGroupOwner/:userGroupName/:memberUser       controllers.UserGroups.addMember(requestUser: String, userGroupOwner: String, userGroupName: String, memberUser: String)
+GET     /userGroup/deleteMember/:requestUser/:userGroupOwner/:userGroupName/:memberUser    controllers.UserGroups.deleteMember(requestUser: String, userGroupOwner: String, userGroupName: String, memberUser: String)
+GET     /userGroup/addDevice/:requestUser/:userGroupOwner/:userGroupName/:deviceUri        controllers.UserGroups.addDevice(requestUser: String, userGroupOwner: String, userGroupName: String, deviceUri: String)
+GET     /userGroup/deleteDevice/:requestUser/:userGroupOwner/:userGroupName/:deviceUri     controllers.UserGroups.deleteDevice(requestUser: String, userGroupOwner: String, userGroupName: String, deviceUri: String)
+GET     /userGroup/delete/:requestUser/:userGroupOwner/:userGroupName                      controllers.UserGroups.delete(requestUser: String, userGroupOwner: String, userGroupName: String)
+POST    /createUserGroup/:requestUser                                                      controllers.UserGroups.create(requestUser: String)
+
+# SensorType
+# TODO: remove request user from routes
+GET     /sensorType/getAll/:requestUser                                                    controllers.SensorTypes.getAll(requestUser: String)
+GET     /sensorType/delete/:requestUser/:sensorTypeUri                                     controllers.SensorTypes.delete(requestUser: String, sensorTypeUri: String)
+POST    /createSensorType/:requestUser                                                     controllers.SensorTypes.create(requestUser: String)
+
+# DeviceType
+# TODO: remove request user from routes
+GET     /deviceType/getAll/:requestUser                                                    controllers.DeviceTypes.getAll(requestUser: String)
+GET     /deviceType/delete/:requestUser/:deviceTypeUri                                     controllers.DeviceTypes.delete(requestUser: String, deviceTypeUri: String)
+POST    /createDeviceType/:requestUser                                                     controllers.DeviceTypes.create(requestUser: String)
+
+# Sensor
+# TODO: remove request user from routes
+GET     /sensor/get/:requestUser/:sensorUri                                                controllers.Sensors.get(requestUser: String, sensorUri: String)
+GET     /sensor/gets/:requestUser/:deviceUri                                               controllers.Sensors.gets(requestUser: String, deviceUri: String)
+
+# Device
+# TODO: remove request user from routes
+GET     /device/get/:requestUser/:deviceUri                                                controllers.Devices.get(requestUser: String, deviceUri: String)
+GET     /device/delete/:requestUser/:deviceUri                                             controllers.Devices.delete(requestUser: String, deviceUri: String)
+POST    /createDevice/:requestUser                                                         controllers.Devices.create(requestUser: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                                                                      controllers.Assets.at(path="/public", file)

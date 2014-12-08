@@ -1,0 +1,10 @@
+run 8080
+clean
+compile
+run 8080
+compile
+run 8080
+compile
+run 8080
+compile
+run 8080

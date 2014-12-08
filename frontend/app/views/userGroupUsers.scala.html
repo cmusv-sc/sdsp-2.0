@@ -1,0 +1,64 @@
+
+@(userGroup: UserGroup, ugForm: play.data.Form[UserGroup])
+
+@import helper._
+
+@main(userGroup.getUserGroupName() + " Devices") {
+
+  <h2>@userGroup.getUserGroupName() User Group</h2>
+  <h3>@(userGroup.getMemberUsers().length + 1) members</h3>
+  @if(userGroup.getMemberInvite()) {
+    <h4>Setting: members may invite others</h4>
+  } else {
+    <h4>Setting: members may not invite others</h4>
+  }
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Username</td>
+      <td>Membership</td>
+      <td>Operation</td>
+    </tr>
+
+    <tr id="@userGroup.getUserGroupOwner()" class="users">
+      <td class="username">@userGroup.getUserGroupOwner()</td>
+      <td class="membership">Owner</td>
+      <td class="operation">&nbsp</td>
+    </tr>
+
+    @for(username <- userGroup.getMemberUsers()) {
+      <tr id=@username class="user">
+        <td class="username">@username</td>
+        <td class="membership">Member</td>
+        <td class="operation">
+          @if(session.get("username").equals(userGroup.getUserGroupOwner()) || session.get("username").equals(username)) {
+            @form(routes.UserGroups.deleteMember()) {
+              <input name="username" type="hidden" value=@username>
+              <input name="userGroupOwner" type="hidden" value=@userGroup.getUserGroupOwner()>
+              <input name="userGroupName" type="hidden" value=@userGroup.getUserGroupName()>
+              @if(session.get("username").equals(userGroup.getUserGroupOwner())) {
+                <input type="submit" class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this member? All shared devices by this member will also be deleted.')">
+              } else {
+                <input type="submit" class="btn btn-danger" value="Leave" onclick="return confirm('Are you sure you want to leave this group? All your shared devices will be deleted from the group.')">
+              }
+            }
+          }
+        </td>
+      </tr>
+    }
+  </table>
+
+  @if(session.get("username").equals(userGroup.getUserGroupOwner()) || userGroup.getMemberInvite()) {
+    @form(routes.UserGroups.addMember()) {
+      <h3>Invite another member to this user group</h3>
+      <input name="userGroupOwner" type="hidden" value=@userGroup.getUserGroupOwner()>
+      <input name="userGroupName" type="hidden" value=@userGroup.getUserGroupName()>
+      @inputText( ugForm("username"), '_label -> "Username")
+      <div class="actions">
+        <input type="submit" class="btn btn-success" value="Invite">
+        <a href="@routes.UserGroups.displayUsers(userGroup.getUserGroupOwner(), userGroup.getUserGroupName())" class="btn">Cancel</a>
+      </div>
+    }
+  }
+
+}
+

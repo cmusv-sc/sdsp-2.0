@@ -1,0 +1,51 @@
+
+@(sensorTypes: List[SensorType], stForm: play.data.Form[SensorType])
+
+@import helper._
+
+@main("Sensor Types") {
+
+  <h2>@sensorTypes.size() Sensor Types</h2>
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Uri</td>
+      <td>Sensor Category</td>
+      <td>Manufacturer</td>
+      <td>Version</td>
+      <td>Count</td>
+      <td>Operation</td>
+    </tr>
+
+    @for(st <- sensorTypes) {
+      <tr id="@st.getSensorTypeUri()" class="sensorTypes">
+        <td class="sensorTypeUri">@st.getSensorTypeUri()</td>
+        <td class="sensorCategory">@st.getSensorCategory()</td>
+        <td class="manufacturer">@st.getManufacturer()</td>
+        <td class="version">@st.getVersion()</td>
+        <td class="count">@st.getInstanceCount()</td>
+        <td class="operation">
+          @form(routes.SensorTypes.delete()) {
+            <input name="uriHolder" type="hidden" value="@st.getSensorTypeUri()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+          }
+        </td>
+      </tr>
+    }
+  </table>
+
+  @form(routes.SensorTypes.create()) {
+    <h3>Create a new sensor type</h3>
+    @inputText( stForm("sensorTypeUri"), '_label -> "Sensor Type Uri")
+    @inputText( stForm("sensorCategory"), '_label -> "Sensor Category")
+    @inputText( stForm("manufacturer"), '_label -> "Manufacturer")
+    @inputText( stForm("version"), '_label -> "Version")
+    @inputText( stForm("unit"), '_label -> "Unit")
+    @inputText( stForm("minimumValue"), '_label -> "Minimum Value")
+    @inputText( stForm("maximumValue"), '_label -> "Maximum Value")
+    @inputText( stForm("interpreter"), '_label -> "Interpreter")
+    <div class="actions">
+      <input type="submit" class="btn btn-success" value="Create">
+      <a href="@routes.SensorTypes.display()" class="btn">Cancel</a>
+    </div>
+  }
+}

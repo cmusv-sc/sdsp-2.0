@@ -1,0 +1,51 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                                         controllers.Application.index()
+
+# Login and authentication
+GET     /login                                                    controllers.Application.login()
+POST    /login                                                    controllers.Application.authenticate()
+GET     /logout                                                   controllers.Application.logout()
+GET     /register                                                 controllers.Application.register()
+POST    /register                                                 controllers.Application.registerUser()
+
+# DevicesGroups
+GET     /deviceGroups                                             controllers.DeviceGroups.display()
+GET     /deviceGroup/:deviceGroupName                             controllers.DeviceGroups.displayGroup(deviceGroupName: String)
+POST    /createDeviceGroup                                        controllers.DeviceGroups.create()
+POST    /deleteDeviceGroup                                        controllers.DeviceGroups.delete()
+POST    /deviceGroup/addDevice                                    controllers.DeviceGroups.addDevice()                                     
+POST    /deviceGroup/deleteDevice                                 controllers.DeviceGroups.deleteDevice()
+
+# UserGroups
+GET     /userGroups                                               controllers.UserGroups.display()
+GET     /userGroup/users/:userGroupOwner/:userGroupName           controllers.UserGroups.displayUsers(userGroupOwner: String, userGroupName: String)
+GET     /userGroup/devices/:userGroupOwner/:userGroupName         controllers.UserGroups.displayDevices(userGroupOwner: String, userGroupName: String)
+POST    /createUserGroup                                          controllers.UserGroups.create()
+POST    /deleteUserGroup                                          controllers.UserGroups.delete()
+POST    /userGroup/addMember                                      controllers.UserGroups.addMember()
+POST    /userGroup/deleteMember                                   controllers.UserGroups.deleteMember()
+POST    /userGroup/addDevice                                      controllers.UserGroups.addDevice()
+POST    /userGroup/deleteDevice                                   controllers.UserGroups.deleteDevice()
+
+# SensorTypes
+GET     /sensorTypes                                              controllers.SensorTypes.display()
+POST    /deleteSensorType                                         controllers.SensorTypes.delete()
+POST    /createSensorType                                         controllers.SensorTypes.create()
+
+# DeviceTypes
+GET     /deviceTypes                                              controllers.DeviceTypes.display()
+POST    /deleteDeviceType                                         controllers.DeviceTypes.delete()
+POST    /createDeviceType                                         controllers.DeviceTypes.create()
+
+# Device
+GET     /device/:deviceUri                                        controllers.Devices.display(deviceUri: String)
+POST    /device/createPage                                        controllers.Devices.createPage()
+POST    /deleteDevice                                             controllers.Devices.delete()
+POST    /createDevice                                             controllers.Devices.create()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                       controllers.Assets.at(path="/public", file)

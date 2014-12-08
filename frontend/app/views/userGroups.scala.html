@@ -1,0 +1,52 @@
+
+@(userGroups: List[UserGroup], ugForm: play.data.Form[UserGroup])
+
+@import helper._
+
+@main("User Groups") {
+
+  <h2>@userGroups.size() User Groups</h2>
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Name</td>
+      <td>Owner</td>
+      <td>Members</td>
+      <td>Devices</td>
+      <td>Operation</td>
+    </tr>
+
+    @for(userGroup <- userGroups) {
+      <tr id="@userGroup.getUserGroupId()" class="userGroups">
+        <td class="userGroupName">@userGroup.getUserGroupName()</td>
+        <td class="userGroupOwner">@userGroup.getUserGroupOwner()</td>
+        <td class="userGroupMemberCount">@(userGroup.getMemberUsers().length+1)</td>
+        <td class="userGroupDeviceCount">@userGroup.getDeviceUris().length</td>
+        <td class="operation">
+          @form(routes.UserGroups.displayUsers(userGroup.getUserGroupOwner(), userGroup.getUserGroupName())) {
+            <input type="submit"  class="btn btn-primary" value="Users">
+          }
+          @form(routes.UserGroups.displayDevices(userGroup.getUserGroupOwner(), userGroup.getUserGroupName())) {
+            <input type="submit"  class="btn btn-primary" value="Devices">
+          }
+          @if(session.get("username").equals(userGroup.getUserGroupOwner())) {
+            @form(routes.UserGroups.delete()){
+              <input name="nameHolder" type="hidden" value="@userGroup.getUserGroupName()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+            }
+          } 
+        </td>
+      </tr>
+    }
+  </table>
+
+  @form(routes.UserGroups.create()) {
+    <h3>Create a new user group</h3>
+    @inputText( ugForm("userGroupName"), '_label -> "User Group Name")
+    @inputRadioGroup( ugForm("memberEdit"), options = options("Yes"->"Yes", "No"->"No"), '_label -> "Can members add their devices to this group?")
+    @inputRadioGroup( ugForm("memberInvite"), options = options("Yes"->"Yes", "No"->"No"), '_label -> "Can members invite others to this group?")
+    <div class="actions">
+      <input type="submit" class="btn btn-success" value="Create">
+      <a href="@routes.UserGroups.display()" class="btn">Cancel</a>
+    </div>
+  }
+}

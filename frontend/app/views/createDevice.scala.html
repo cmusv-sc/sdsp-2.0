@@ -1,0 +1,23 @@
+
+@(deviceType: DeviceType, deviceForm: play.data.Form[Device])
+
+@import helper._
+
+@main("Create Device") {
+
+  <h2>Create Device of Type @deviceType.getDeviceTypeUri()</h2>
+
+  @form(routes.Devices.create()) {
+    <input name="deviceTypeUri" type="hidden" value="@deviceType.getDeviceTypeUri()">
+    @inputText( deviceForm("deviceUri"), '_label -> "Device Uri") 
+    @for(i <- 0 to deviceType.getSensorTypeUris().length-1) {
+      @inputText( deviceForm("sensorUri" + i), '_label -> ("Sensor Uri for Sensor Type " + deviceType.getSensorTypeUris()(i)))
+    }
+    @inputText( deviceForm("deviceUserDefinedFields"), '_label -> "User Defined Fields")
+
+    <div class="actions">
+      <input type="submit" class="btn btn-success" value="Create">
+      <a href="@routes.DeviceGroups.displayGroup("Personal")" class="btn">Cancel</a>
+    </div>
+  }
+}

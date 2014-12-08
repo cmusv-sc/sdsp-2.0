@@ -1,0 +1,75 @@
+
+@(deviceGroupName: String, devices: List[Device])
+
+@import helper._
+
+@main(deviceGroupName + " Device Group") {
+
+  <h2>@deviceGroupName Device Group</h2>
+  <h3>@devices.size() Devices</h3>
+  <table class="table table-striped table-bordered table-condensed">
+    <tr>
+      <td>Device Uri</td>
+      <td>Device Type Uri</td>
+      <td>Sensor Uris</td>
+      <td>Owner</td>
+      <td>User Defined</td>
+      <td>Operation</td>
+    </tr>
+
+    @for(device <- devices) {
+      <tr id="@device.getDeviceId()" class="devices">
+        <td class="deviceUri">@device.getDeviceUri()</td>
+        <td class="deviceTypeUri">@device.getDeviceTypeUri()</td>
+        <td class="sensorUris">@device.getSensorUris()</td>
+        <td class="owner">@device.getOwner()</td>
+        <td class="userDefined">@device.getDeviceUserDefinedFields()</td>
+        <td class="operation">
+          @if(deviceGroupName.equals("Personal")) {
+            @form(routes.Devices.delete()){
+              <input name="deviceUri" type="hidden" value="@device.getDeviceUri()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+            }
+          } else { @if(session.get("username").equals(device.getOwner())){
+            @form(routes.DeviceGroups.deleteDevice()){
+              <input name="nameHolder" type="hidden" value=@deviceGroupName>
+              <input name="uriHolder" type="hidden" value="@device.getDeviceUri()">
+              <input type="submit"  class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+            }
+          } }
+        </td>
+      </tr>
+    }
+  </table>
+
+  @if(deviceGroupName.equals("Personal")) {
+    @form(routes.Devices.createPage()) {
+      <h3>Create a new device</h3>
+      <label for="deviceTypeUri">Device Type Uri</label>
+      <select id="deviceTypeUri" name="deviceTypeUri">
+        @for(deviceTypeUri <- DeviceType.getDeviceTypeUris(session.get("username"))) {
+          <option value=@deviceTypeUri>@deviceTypeUri</option>
+        }
+      </select> 
+      <div class="actions">
+        <input type="submit" class="btn btn-success" value="Create">
+        <a href="@routes.DeviceGroups.displayGroup(deviceGroupName)" class="btn">Cancel</a>
+      </div>
+    }
+  } else { @if(!deviceGroupName.equals("Shared")) {
+    @form(routes.DeviceGroups.addDevice()) {
+      <h3>Add a personal or shared device to this device group</h3>
+      <input name="nameHolder" type="hidden" value=@deviceGroupName>
+      <label for="deviceUri">Device Uri</label>
+      <select id="deviceUri" name="deviceUri">
+        @for(deviceUri <- DeviceGroup.getAllDeviceUris(session.get("username"))) {
+          <option value=@deviceUri>@deviceUri</option>
+        }
+      </select> 
+      <div class="actions">
+        <input type="submit" class="btn btn-success" value="Add">
+        <a href="@routes.DeviceGroups.displayGroup(deviceGroupName)" class="btn">Cancel</a>
+      </div>
+    }
+  }}
+}
